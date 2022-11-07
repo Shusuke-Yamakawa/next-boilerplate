@@ -1,0 +1,5 @@
+@use '@/styles/pc/variables.scss';
+
+.error {
+  font-size: variables.$font-size-0;
+}
