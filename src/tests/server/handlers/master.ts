@@ -8,7 +8,15 @@ import {delayedResponse} from '@/tests/server/utils'
  * マスタ取得のリクエストハンドラー
  */
 export const masterHandlers = [
-  rest.get(`${API_URL}${RESUME_URL.MASTER_SCHOOL}`, (req, res, ctx) =>
-    delayedResponse(ctx.status(STATUS_CODES.OK), ctx.json({items: masterSchools}))
-  ),
+  rest.get(`${API_URL}${RESUME_URL.MASTER_SCHOOL}`, (req, res, ctx) => {
+    const q = req.url.searchParams.get('q')
+    console.log(q)
+    let schools = masterSchools
+    if (q) {
+      schools = schools.filter(school => school.name.includes(q))
+    }
+    console.log(schools)
+
+    return delayedResponse(ctx.status(STATUS_CODES.OK), ctx.json({items: schools}))
+  }),
 ]
