@@ -15,6 +15,9 @@ export const masterHandlers = [
     if (q) {
       schools = schools.filter(school => school.name.includes(q))
     }
+    // if (schools.length === 0) {
+    //   schools = masterSchools
+    // }
     console.log(schools)
 
     return delayedResponse(ctx.status(STATUS_CODES.OK), ctx.json({items: schools}))

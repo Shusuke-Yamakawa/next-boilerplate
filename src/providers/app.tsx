@@ -1,6 +1,6 @@
 import {MantineProvider} from '@mantine/core'
 import {NotificationsProvider} from '@mantine/notifications'
-import {QueryClientProvider} from '@tanstack/react-query'
+import {QueryClient, QueryClientProvider} from '@tanstack/react-query'
 import {ReactQueryDevtools} from '@tanstack/react-query-devtools'
 import {useAtomsDevtools} from 'jotai/devtools'
 import {theme} from '@/libs/mantine'
