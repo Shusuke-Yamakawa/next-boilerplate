@@ -12,6 +12,12 @@ export default function Home() {
       <Link href="lib/mantine" className="text-blue-400">
         mantineへ
       </Link>
+      <Link href="lib/dnd" className="text-blue-400">
+        dndへ
+      </Link>
+      <Link href="lib/dndStart" className="text-blue-400">
+        dndStartへ
+      </Link>
     </div>
   )
 }

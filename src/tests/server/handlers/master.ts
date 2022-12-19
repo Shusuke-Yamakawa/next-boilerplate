@@ -3,6 +3,7 @@ import {STATUS_CODES} from '@/constants/messages'
 import {masterSchools} from '@/tests/data/Resume/Education'
 import {API_URL, RESUME_URL} from '@/tests/server/endpoint'
 import {delayedResponse} from '@/tests/server/utils'
+import {hiraganaToKatakana} from '@/utils/string.util'
 
 /**
  * マスタ取得のリクエストハンドラー
@@ -13,12 +14,14 @@ export const masterHandlers = [
     console.log(q)
     let schools = masterSchools
     if (q) {
-      schools = schools.filter(school => school.name.includes(q))
+      schools = schools.filter(
+        school =>
+          school.name.toLowerCase().includes(q.toLowerCase().trim()) ||
+          school.kana.toLowerCase().includes(q.toLowerCase().trim()) ||
+          school.kana.toLowerCase().includes(hiraganaToKatakana(q).toLowerCase().trim()) ||
+          school.english.toLowerCase().includes(q.toLowerCase().trim())
+      )
     }
-    // if (schools.length === 0) {
-    //   schools = masterSchools
-    // }
-    console.log(schools)
 
     return delayedResponse(ctx.status(STATUS_CODES.OK), ctx.json({items: schools}))
   }),

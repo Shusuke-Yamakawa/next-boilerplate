@@ -1,11 +1,11 @@
-import {Suspense} from 'react'
+import {Suspense, useState} from 'react'
 import {Loader} from '@mantine/core'
-import {Dnd} from '@/components/Dnd'
+import {DndStart} from '@/components/DndStart'
 
 export default function dnd() {
   return (
     <Suspense fallback={<Loader />}>
-      <Dnd />
+      <DndStart />
     </Suspense>
   )
 }

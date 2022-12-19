@@ -1,11 +1,11 @@
 import {Suspense} from 'react'
 import {Loader} from '@mantine/core'
-import {Dnd} from '@/components/Dnd'
+import {ZodComponent} from '@/components/zod'
 
-export default function dnd() {
+export default function zod() {
   return (
     <Suspense fallback={<Loader />}>
-      <Dnd />
+      <ZodComponent />
     </Suspense>
   )
 }
