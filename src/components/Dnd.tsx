@@ -1,4 +1,5 @@
-import {useState} from 'react'
+import {useCallback, useMemo, useState} from 'react'
+import {DragEndEvent} from '@dnd-kit/core'
 import {arrayMove} from '@dnd-kit/sortable'
 import {Autocomplete, NumberInput, Text, Code} from '@mantine/core'
 import {useForm, zodResolver} from '@mantine/form'
@@ -30,15 +31,15 @@ const schema = z.object({
 export const Dnd = () => {
   const items = [
     {
-      id: '1',
+      id: 2012,
       acquisitionYear: 2012,
     },
     {
-      id: '2',
+      id: 2014,
       acquisitionYear: 2014,
     },
     {
-      id: '3',
+      id: 2022,
       acquisitionYear: 2022,
     },
   ]
@@ -51,37 +52,70 @@ export const Dnd = () => {
     validateInputOnChange: true,
   })
 
-  const handleDragEnd = (event: any) => {
+  const handleDragEnd = (event: DragEndEvent) => {
     const {active, over} = event
+    if (!over) return
+    console.log('active: ', active.id)
+    console.log('over: ', over.id)
+
     if (active.id !== over.id) {
-      console.log(active)
-      console.log(over)
-      form.reorderListItem('licentiates', {from: active.id, to: over.id})
+      const oldIndex = form.values.licentiates.findIndex(i => i.id === active.id)
+      const newIndex = form.values.licentiates.findIndex(i => i.id === over.id)
+      console.log('oldIndex: ', oldIndex)
+      console.log('newIndex: ', newIndex)
+
+      form.reorderListItem('licentiates', {from: oldIndex, to: newIndex})
     }
   }
 
-  const fields = form.values.licentiates.map((_, index) => (
-    <SortableItem key={index} id={index}>
-      <div key={index} className="w-96 border-2 border-orange-200 p-4">
-        <NumberInput
-          className="m-0 w-48"
-          placeholder="Your age"
-          mt="sm"
-          {...form.getInputProps(`licentiates.${index}.acquisitionYear`)}
-        />
-      </div>
-    </SortableItem>
-  ))
+  const addItems = useCallback(() => {
+    form.insertListItem('licentiates', {
+      id: 1,
+      acquisitionYear: null,
+    })
+  }, [form])
+
+  const deleteItems = useCallback(
+    (id: number) => {
+      const targetIndex = form.values.licentiates.findIndex(i => i.id === id)
+      form.removeListItem('licentiates', targetIndex)
+    },
+    [form]
+  )
+
+  const fields = useMemo(
+    () =>
+      form.values.licentiates.map((item, index) => (
+        <SortableItem key={item.id} id={item.id}>
+          <div className="flex gap-4">
+            <div>ラベル</div>
+            <NumberInput
+              className="m-0 w-48"
+              placeholder="Your age"
+              mt="sm"
+              {...form.getInputProps(`licentiates.${index}.acquisitionYear`)}
+            />
+            <button onClick={() => deleteItems(item.id)} data-dndkit-disabled-dnd-flag="true">
+              xxx
+            </button>
+          </div>
+        </SortableItem>
+      )),
+    [deleteItems, form]
+  )
 
   return (
     <div className="flex flex-col items-center">
       <DndContext handleDragEnd={handleDragEnd} items={form.values.licentiates}>
-        <div className="mt-6">{fields}</div>
+        {fields}
       </DndContext>
       <Text size="sm" weight={500} mt="md">
         Form values:
       </Text>
       <Code block>{JSON.stringify(form.values, null, 2)}</Code>
+      <button className="mt-4 border-2 bg-orange-300" onClick={addItems}>
+        フォーム追加
+      </button>
     </div>
   )
 }

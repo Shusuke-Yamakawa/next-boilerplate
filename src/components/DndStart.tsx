@@ -1,13 +1,5 @@
 import {useState} from 'react'
-import {
-  closestCenter,
-  DndContext,
-  DragOverlay,
-  KeyboardSensor,
-  PointerSensor,
-  useSensor,
-  useSensors,
-} from '@dnd-kit/core'
+import {closestCenter, DndContext, DragOverlay, KeyboardSensor, MouseSensor, useSensor, useSensors} from '@dnd-kit/core'
 import {arrayMove, SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy} from '@dnd-kit/sortable'
 import {Autocomplete, NumberInput, TextInput} from '@mantine/core'
 import {useForm, zodResolver} from '@mantine/form'
@@ -22,22 +14,22 @@ import {API_URL, RESUME_URL} from '@/tests/server/endpoint'
 export const DndStart = () => {
   const [items, setItems] = useState([
     {
-      id: '1',
+      id: 1,
       content: '資格１',
     },
     {
-      id: '2',
+      id: 2,
       content: '資格２',
     },
     {
-      id: '3',
+      id: 3,
       content: '資格３',
     },
   ])
-  // PointerSensorがマウスでの移動許可。
+  // MouseSensorがマウスでの移動許可。
   // KeyboardSensorがキーボードでの移動許可。sortableKeyboardCoordinatesは矢印キーで移動許可
   const sensors = useSensors(
-    useSensor(PointerSensor),
+    useSensor(MouseSensor),
     useSensor(KeyboardSensor, {
       coordinateGetter: sortableKeyboardCoordinates,
     })
@@ -55,12 +47,9 @@ export const DndStart = () => {
 
   return (
     <div className="m-auto mt-8 w-96">
-      {/*
-       * collisionDetection closestCenterを指定することでドラッグしているアイテムと対象のアイテムの中央が交差すると、順番を入れ替えたという判定になる.
-       */}
-      <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+      <DndContext sensors={sensors} onDragEnd={handleDragEnd}>
         {/*
-         * strategy 縦方向のソート
+         * verticalListSortingStrategy 垂直リスト用の最適化設定
          */}
         <SortableContext items={items} strategy={verticalListSortingStrategy}>
           {items.map(item => (

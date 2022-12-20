@@ -1,10 +1,10 @@
-import {FC, ReactNode, useState} from 'react'
+import {FC, ReactNode, type MouseEvent, type KeyboardEvent} from 'react'
 import {
   closestCenter,
-  DndContext as DndContextKit,
+  DndContext as LibDndContext,
   DragEndEvent,
-  DragOverlay,
-  KeyboardSensor,
+  MouseSensor as LibMouseSensor,
+  KeyboardSensor as LibKeyboardSensor,
   PointerSensor,
   UniqueIdentifier,
   useSensor,
@@ -26,14 +26,52 @@ type Props = {
   items: {
     id: UniqueIdentifier
   }[]
-  children: ReactNode
+  children: JSX.Element[]
+}
+
+// data-dndkit-disabled-dnd-flag="true" が指定されている要素はドラッグ無効にする
+const shouldHandleEvent = (element: HTMLElement | null) => {
+  let cur = element
+
+  while (cur) {
+    if (cur.dataset && cur.dataset.dndkitDisabledDndFlag) {
+      return false
+    }
+    cur = cur.parentElement
+  }
+
+  return true
+}
+
+// MouseSensorをoverrideして、data-dndkit-disabled-dnd-flagが指定されている要素はドラッグ無効にする
+class MouseSensor extends LibMouseSensor {
+  static activators = [
+    {
+      eventName: 'onMouseDown' as const,
+      handler: ({nativeEvent: event}: MouseEvent): boolean => {
+        return shouldHandleEvent(event.target as HTMLElement)
+      },
+    },
+  ]
+}
+
+// KeyboardSensorをoverrideして、data-dndkit-disabled-dnd-flagが指定されている要素はドラッグ無効にする
+class KeyboardSensor extends LibKeyboardSensor {
+  static activators = [
+    {
+      eventName: 'onKeyDown' as const,
+      handler: ({nativeEvent: event}: KeyboardEvent<Element>): boolean => {
+        return shouldHandleEvent(event.target as HTMLElement)
+      },
+    },
+  ]
 }
 
 export const DndContext: FC<Props> = ({handleDragEnd, items, children}) => {
-  // PointerSensorがマウスでの移動許可。
+  // MouseSensorがマウスでの移動許可。
   // KeyboardSensorがキーボードでの移動許可。sortableKeyboardCoordinatesは矢印キーで移動許可
   const sensors = useSensors(
-    useSensor(PointerSensor),
+    useSensor(MouseSensor),
     useSensor(KeyboardSensor, {
       coordinateGetter: sortableKeyboardCoordinates,
     })
@@ -42,16 +80,17 @@ export const DndContext: FC<Props> = ({handleDragEnd, items, children}) => {
   return (
     <div className="m-auto mt-8 w-96">
       {/*
-       * collisionDetection closestCenterを指定することでドラッグしているアイテムと対象のアイテムの中央が交差すると、順番を入れ替えたという判定になる.
+       * id="0" 以下のwarningを出さないために設定
+       * https://github.com/clauderic/dnd-kit/issues/926
        */}
-      <DndContextKit sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+      <LibDndContext id="0" sensors={sensors} onDragEnd={handleDragEnd}>
         {/*
-         * strategy 縦方向のソート
+         * verticalListSortingStrategy 垂直リスト用の最適化設定
          */}
         <SortableContext items={items} strategy={verticalListSortingStrategy}>
           {children}
         </SortableContext>
-      </DndContextKit>
+      </LibDndContext>
     </div>
   )
 }
