@@ -70,7 +70,7 @@ export const Dnd = () => {
 
   const addItems = useCallback(() => {
     form.insertListItem('licentiates', {
-      id: 1,
+      id: 4,
       acquisitionYear: null,
     })
   }, [form])

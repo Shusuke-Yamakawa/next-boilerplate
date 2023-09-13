@@ -1,11 +1,10 @@
 import {VALIDATION_ERROR_RULE} from '@/constants/messages'
-import type {EducationDto} from '@bizreach-inc/biz-candidate-typescript-axios'
 
 /**
  * 学歴のテストデータ
  * @package
  */
-export const education: EducationDto = {
+export const education: any = {
   items: [
     {
       id: 1,
@@ -34,7 +33,7 @@ export const education: EducationDto = {
  * 学歴のテストデータ（英語なし）
  * @package
  */
-export const educationNoneEnglish: EducationDto = {
+export const educationNoneEnglish: any = {
   items: [
     {
       id: 1,
@@ -53,7 +52,7 @@ export const educationNoneEnglish: EducationDto = {
  * 学歴のテストデータ（必須のみ設定）
  * @package
  */
-export const educationOnlyRequired: EducationDto = {
+export const educationOnlyRequired: any = {
   items: [
     {
       id: 1,
@@ -72,7 +71,7 @@ export const educationOnlyRequired: EducationDto = {
  * 学歴のテストデータ（学校名と学部学科が最大文字数）
  * @package
  */
-export const educationThatEnteredMaxLength: EducationDto = {
+export const educationThatEnteredMaxLength: any = {
   items: [
     {
       id: 1,

@@ -1,5 +1,6 @@
-import {Group, Button} from '@mantine/core'
-import {showNotification} from '@mantine/notifications'
+import {Group, Button, TextInput} from '@mantine/core'
+import {modals} from '@mantine/modals'
+import {notifications} from '@mantine/notifications'
 import {AlertTriangle} from 'tabler-icons-react'
 
 const Toast = () => {
@@ -8,7 +9,7 @@ const Toast = () => {
       <Button
         variant="outline"
         onClick={() =>
-          showNotification({
+          notifications.show({
             title: 'エラーが発生しました',
             message: '時間を置いて再度実行ください',
             autoClose: false,
@@ -19,6 +20,25 @@ const Toast = () => {
         }
       >
         Show notification
+      </Button>
+      <Button
+        variant="outline"
+        onClick={() =>
+          modals.open({
+            title: 'Subscribe to newsletter',
+            children: (
+              <>
+                <TextInput label="Your email" placeholder="Your email" data-autofocus />
+                <Button fullWidth onClick={() => modals.closeAll} mt="md">
+                  Submit
+                </Button>
+              </>
+            ),
+            classNames: {content: 'w-50'},
+          })
+        }
+      >
+        Show modal
       </Button>
     </Group>
   )

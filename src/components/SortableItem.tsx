@@ -4,7 +4,7 @@ import {CSS} from '@dnd-kit/utilities'
 
 type Props = {
   id: number
-  children: JSX.Element
+  children: any
 }
 
 export const SortableItem: FC<Props> = ({id, children}) => {

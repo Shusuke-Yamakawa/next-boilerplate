@@ -83,7 +83,7 @@ export const DndContext: FC<Props> = ({handleDragEnd, items, children}) => {
        * id="0" 以下のwarningを出さないために設定
        * https://github.com/clauderic/dnd-kit/issues/926
        */}
-      <LibDndContext id="0" sensors={sensors} onDragEnd={handleDragEnd}>
+      <LibDndContext sensors={sensors} onDragEnd={handleDragEnd}>
         {/*
          * verticalListSortingStrategy 垂直リスト用の最適化設定
          */}

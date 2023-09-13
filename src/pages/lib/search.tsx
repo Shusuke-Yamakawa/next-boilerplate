@@ -9,7 +9,7 @@ import {useFetch} from '@/hooks'
 import {API_URL, RESUME_URL} from '@/tests/server/endpoint'
 
 export default function Search() {
-  const [keyword, setKeyword] = useState()
+  const [keyword, setKeyword] = useState('')
   const {data} = useQuery(
     ['bookData', keyword],
     () => axios.get(`https://www.googleapis.com/books/v1/volumes?q=search+${keyword}`).then(res => res.data),
@@ -21,7 +21,7 @@ export default function Search() {
       <input placeholder="検索ワードを入力してください" value={keyword} onChange={e => setKeyword(e.target.value)} />
       <div>
         <h1>検索ワードにヒットしたデータ：</h1>
-        {data && data.items.map(item => <p>{item.id}</p>)}
+        {data && data.items.map((item: any) => <p key={item.id}>{item.id}</p>)}
       </div>
     </>
   )

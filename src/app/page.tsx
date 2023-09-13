@@ -1,7 +1,4 @@
-import Head from 'next/head'
-import Image from 'next/image'
 import Link from 'next/link'
-import styles from '../styles/Home.module.css'
 
 export default function Home() {
   return (
@@ -17,6 +14,9 @@ export default function Home() {
       </Link>
       <Link href="lib/dndStart" className="text-blue-400">
         dndStartへ
+      </Link>
+      <Link href="experimental" className="text-blue-400">
+        app router実験
       </Link>
     </div>
   )
